@@ -19,6 +19,7 @@ buildscript {
 allprojects {
     repositories {
         google()
+        mavenCentral()
         jcenter()
         
     }
@@ -40,6 +41,7 @@ ext {
     vectorDrawableVersion = '1.0.1'
     animatedVectorDrawableVersion = '1.0.0'
     gsonVersion = '2.8.2'
+    greenDaoVersion = '3.3.0'
 
     dagger2Version = '2.16'
     rxjava2Version = '2.1.9'
