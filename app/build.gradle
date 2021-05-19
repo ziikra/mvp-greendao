@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.example.arsitektur_mvp_and_greendao"
@@ -12,6 +11,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -21,14 +21,49 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    // android support libraries
+    implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
+    implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerViewVersion"
+    implementation "com.google.android.material:material:$rootProject.materialVersion"
+    implementation "androidx.vectordrawable:vectordrawable:$rootProject.vectorDrawableVersion"
+    implementation "androidx.vectordrawable:vectordrawable-animated:$rootProject.animatedVectorDrawableVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
+
+    // parser
+    implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
+
+    // database
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation "org.greenrobot:greendao:$rootProject.greenDaoVersion"
+
+    // dependency injection
+    implementation "com.google.dagger:dagger:$rootProject.dagger2Version"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
+
+    // reactive
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjava2Version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
+
+    // dependencies for local unit tests
+    testImplementation "junit:junit:$rootProject.ext.junitVersion"
+    testImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
+    testAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
+
+    // UI Testing
+    androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$rootProject.espressoVersion"
+    androidTestImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
+    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
 }
