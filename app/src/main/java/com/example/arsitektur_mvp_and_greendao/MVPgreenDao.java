@@ -2,6 +2,9 @@ package com.example.arsitektur_mvp_and_greendao;
 
 import android.app.Application;
 
+import com.example.arsitektur_mvp_and_greendao.di.component.ApplicationComponent;
+import com.example.arsitektur_mvp_and_greendao.di.module.ApplicationModule;
+
 import dagger.internal.DaggerCollections;
 
 public class MVPgreenDao extends Application {
