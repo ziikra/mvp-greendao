@@ -21,7 +21,6 @@ public class ApplicationModule {
 
     private final Application mApplication;
 
-    @ApplicationContext
     public ApplicationModule(Application mApplication){
         this.mApplication =  mApplication;
     }

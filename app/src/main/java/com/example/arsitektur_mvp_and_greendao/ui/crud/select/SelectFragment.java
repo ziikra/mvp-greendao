@@ -1,0 +1,157 @@
+package com.example.arsitektur_mvp_and_greendao.ui.crud.select;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.MediaController;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.core.widget.ContentLoadingProgressBar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.arsitektur_mvp_and_greendao.R;
+import com.example.arsitektur_mvp_and_greendao.data.others.Medical;
+import com.example.arsitektur_mvp_and_greendao.di.component.ActivityComponent;
+import com.example.arsitektur_mvp_and_greendao.ui.base.BaseFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+public class SelectFragment extends BaseFragment implements SelectMvpView, SelectAdapter.Callback {
+    @Inject
+    @Named("selectPresenter")
+    SelectPresenter<SelectMvpView> mPresenter;
+
+    @Inject
+    @Named("selectAdapter")
+    SelectAdapter mSelectAdapter;
+
+    @Inject
+    LinearLayoutManager mLayoutManager;
+
+    ContentLoadingProgressBar progressBar;
+
+    FloatingActionButton floatingActionButton;
+
+    RecyclerView mRecyclerView;
+
+    TextView mNumOfRecord;
+
+    TextView mExecutionTime;
+
+    EditText mEditTextNumData;
+
+    Button btnExecute;
+
+    public static SelectFragment newInstance(){
+        SelectFragment fragment = new SelectFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    protected void setUp(View view) {
+        this.mRecyclerView = view.findViewById(R.id.selectRecyclerView);
+        this.mNumOfRecord = view.findViewById(R.id.textViewRecord);
+        this.mExecutionTime = view.findViewById(R.id.textViewTime);
+        this.mEditTextNumData = view.findViewById(R.id.editTextNumData);
+        this.btnExecute = view.findViewById(R.id.btnExecute);
+        this.floatingActionButton = view.findViewById(R.id.fabDown);
+        this.progressBar = view.findViewById(R.id.progressBar);
+
+        this.btnExecute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mEditTextNumData.getText() != null) {
+                    try {
+                        Long numOfData = Long.valueOf(mEditTextNumData.getText().toString());
+                        mPresenter.onSelectExecuteClick(numOfData);
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), "Num Of Data is Not Valid", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Log.d("TAG", "onClick: ");
+                    Toast.makeText(getContext(), "Num Of Data is Not Valid", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        this.floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mRecyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mRecyclerView.scrollToPosition(mSelectAdapter.getItemCount() - 1);
+                    }
+                });
+            }
+        });
+
+        this.mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        this.mRecyclerView.setLayoutManager(mLayoutManager);
+        this.mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        this.mRecyclerView.setAdapter(mSelectAdapter);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_select, container, false);
+
+        ActivityComponent component = getActivityComponent();
+        if (component != null) {
+            component.inject(this);
+            this.mPresenter.onAttach(this);
+            this.mSelectAdapter.setCallback(this);
+        }
+        return view;
+    }
+
+    @Override
+    public void onEmptyViewRetryClick(){
+
+    }
+
+    @Override
+    public void updateNumOfRecordSelect(Long numOfRecord){
+        this.mNumOfRecord.setText("RECORD : " + numOfRecord.toString());
+    }
+
+    @Override
+    public void updateExecutionTimeSelect(Long executionTime){
+        this.mExecutionTime.setText("TIME (MS) : " + executionTime.toString());
+    }
+
+    @Override
+    public void selectMedicalData(List<Medical> medicalList){
+        this.mSelectAdapter.clearItems();
+        this.mSelectAdapter.selectItems(medicalList);
+    }
+
+    @Override
+    public void stateLoadingSelect(boolean state){
+        if (state)
+            this.progressBar.setVisibility(View.VISIBLE);
+        else
+            this.progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDestroyView(){
+        this.mPresenter.onDetach();
+        super.onDestroyView();
+    }
+
+}

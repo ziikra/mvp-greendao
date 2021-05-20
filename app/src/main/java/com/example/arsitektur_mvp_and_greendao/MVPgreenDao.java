@@ -2,12 +2,18 @@ package com.example.arsitektur_mvp_and_greendao;
 
 import android.app.Application;
 
+import com.example.arsitektur_mvp_and_greendao.data.DataManager;
 import com.example.arsitektur_mvp_and_greendao.di.component.ApplicationComponent;
+
+import com.example.arsitektur_mvp_and_greendao.di.component.DaggerApplicationComponent;
 import com.example.arsitektur_mvp_and_greendao.di.module.ApplicationModule;
 
-import dagger.internal.DaggerCollections;
+import javax.inject.Inject;
 
 public class MVPgreenDao extends Application {
+
+    @Inject
+    DataManager dataManager;
 
     private ApplicationComponent mApplicationComponent;
 
@@ -21,7 +27,7 @@ public class MVPgreenDao extends Application {
         mApplicationComponent.inject(this);
     }
 
-    public ApplicationComponent getmApplicationComponent() {
+    public ApplicationComponent getApplicationComponent() {
         return mApplicationComponent;
     }
 

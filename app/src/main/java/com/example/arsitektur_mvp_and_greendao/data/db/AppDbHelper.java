@@ -1,17 +1,20 @@
 package com.example.arsitektur_mvp_and_greendao.data.db;
 
-import androidx.constraintlayout.helper.widget.Flow;
-
-import com.example.arsitektur_mvp_and_greendao.data.db.DbHelper;
+import com.example.arsitektur_mvp_and_greendao.data.db.model.DaoMaster;
+import com.example.arsitektur_mvp_and_greendao.data.db.model.DaoSession;
 import com.example.arsitektur_mvp_and_greendao.data.db.model.Hospital;
+import com.example.arsitektur_mvp_and_greendao.data.db.model.HospitalDao;
 import com.example.arsitektur_mvp_and_greendao.data.db.model.Medicine;
+import com.example.arsitektur_mvp_and_greendao.data.db.model.MedicineDao;
 
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import io.reactivex.Flowable;
 
+@Singleton
 public class AppDbHelper implements DbHelper {
 
     private final DaoSession daoSession;
@@ -24,7 +27,7 @@ public class AppDbHelper implements DbHelper {
     public Flowable<Boolean> insertHospital(Hospital hospital) {
         return Flowable.fromCallable(() -> {
             try {
-                daoSession.getHospitaldDao().insertOrReplace(hospital);
+                daoSession.getHospitalDao().insertOrReplace(hospital);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();

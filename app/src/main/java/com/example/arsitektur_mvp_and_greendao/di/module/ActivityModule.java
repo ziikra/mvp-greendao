@@ -6,6 +6,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.arsitektur_mvp_and_greendao.di.ActivityContext;
+import com.example.arsitektur_mvp_and_greendao.ui.crud.CRUDPagerAdapter;
+import com.example.arsitektur_mvp_and_greendao.ui.crud.delete.DeleteAdapter;
+import com.example.arsitektur_mvp_and_greendao.ui.crud.delete.DeleteMvpView;
+import com.example.arsitektur_mvp_and_greendao.ui.crud.delete.DeletePresenter;
+import com.example.arsitektur_mvp_and_greendao.ui.crud.insert.InsertAdapter;
+import com.example.arsitektur_mvp_and_greendao.ui.crud.insert.InsertMvpView;
+import com.example.arsitektur_mvp_and_greendao.ui.crud.insert.InsertPresenter;
+import com.example.arsitektur_mvp_and_greendao.ui.crud.select.SelectAdapter;
+import com.example.arsitektur_mvp_and_greendao.ui.crud.select.SelectMvpView;
+import com.example.arsitektur_mvp_and_greendao.ui.crud.select.SelectPresenter;
+import com.example.arsitektur_mvp_and_greendao.ui.crud.update.UpdateAdapter;
+import com.example.arsitektur_mvp_and_greendao.ui.crud.update.UpdateMvpView;
+import com.example.arsitektur_mvp_and_greendao.ui.crud.update.UpdatePresenter;
 import com.example.arsitektur_mvp_and_greendao.utils.rx.AppSchedulerProvider;
 import com.example.arsitektur_mvp_and_greendao.utils.rx.SchedulerProvider;
 
@@ -58,6 +71,13 @@ public class ActivityModule {
     @Named("selectPresenter")
     SelectPresenter<SelectMvpView> provideSelectPresenter(
             SelectPresenter<SelectMvpView> presenter){
+        return presenter;
+    }
+
+    @Provides
+    @Named("updatePresenter")
+    UpdatePresenter<UpdateMvpView> provideUpdatePresenter(
+            UpdatePresenter<UpdateMvpView> presenter) {
         return presenter;
     }
 

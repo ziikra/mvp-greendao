@@ -26,16 +26,15 @@ public class Medicine {
     @Property(nameInDb = "name")
     private String name;
 
-    @Generated()
-    public Medicine(Long id, Long hospitalId, String name){
+    @Generated(hash = 1489536452)
+    public Medicine(Long id, Long hospitalId, String name) {
         this.id = id;
         this.hospitalId = hospitalId;
         this.name = name;
     }
 
-    @Generated()
-    public Medicine(){
-
+    @Generated(hash = 1065091254)
+    public Medicine() {
     }
 
     public Long getId() {

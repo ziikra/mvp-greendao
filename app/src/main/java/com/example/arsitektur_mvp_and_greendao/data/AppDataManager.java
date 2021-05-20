@@ -125,7 +125,7 @@ public class AppDataManager implements DataManager {
 
     @Override
     public Flowable<Boolean> deleteHospital(Hospital hospital) {
-        return dbHelper.deleteHospital(hospital)
+        return dbHelper.deleteHospital(hospital);
     }
 
     @Override
