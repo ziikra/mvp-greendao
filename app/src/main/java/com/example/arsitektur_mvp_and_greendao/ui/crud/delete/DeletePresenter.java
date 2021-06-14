@@ -7,6 +7,7 @@ import com.example.arsitektur_mvp_and_greendao.ui.base.BasePresenter;
 import com.example.arsitektur_mvp_and_greendao.utils.rx.SchedulerProvider;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.inject.Inject;
 
@@ -25,7 +26,10 @@ public class DeletePresenter <V extends DeleteMvpView> extends BasePresenter<V> 
     }
 
     public void deleteDatabase(Long numOfData){
-        long startTime = System.currentTimeMillis();
+        AtomicLong viewDeleteTime = new AtomicLong(0);
+        AtomicLong deleteDbTime = new AtomicLong(0);
+        AtomicLong deleteTime = new AtomicLong(0);
+        AtomicLong allDeleteTime = new AtomicLong(System.currentTimeMillis());
         AtomicInteger index = new AtomicInteger(0);
         getCompositeDisposable().add(getDataManager()
                 //Get All Hospital with Limit
@@ -42,9 +46,15 @@ public class DeletePresenter <V extends DeleteMvpView> extends BasePresenter<V> 
                 .concatMap(medicine -> {
                     if (index.get() < numOfData) {
                         index.getAndIncrement();
+                        deleteTime.set(System.currentTimeMillis());
                         return getDataManager().deleteDatabaseMedicine(medicine);
                     }
                     return Flowable.just(false);
+                })
+                .doOnNext(aBoolean -> {
+                    if (aBoolean) {
+                        deleteDbTime.set(deleteDbTime.longValue() + (System.currentTimeMillis() - deleteTime.longValue()));
+                    }
                 })
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(aBoolean -> {
@@ -52,9 +62,12 @@ public class DeletePresenter <V extends DeleteMvpView> extends BasePresenter<V> 
                                 return;
                             if (index.get() == numOfData) {
                                 getMvpView().updateNumOfRecordDelete(index.longValue()); //Change number of record
-                                long endTime = System.currentTimeMillis();
-                                long timeElapsed = endTime - startTime; //In MilliSeconds
-                                getMvpView().updateExecutionTimeDelete(timeElapsed); //Change execution time
+                                getMvpView().updateDeleteDatabaseTime(deleteDbTime.longValue()); //Change execution time
+                                AtomicLong endTime = new AtomicLong(System.currentTimeMillis());
+                                AtomicLong timeElapsed = new AtomicLong(endTime.longValue() - allDeleteTime.longValue());
+                                viewDeleteTime.set(timeElapsed.get() - deleteDbTime.longValue());
+                                getMvpView().updateViewDeleteTime(viewDeleteTime.longValue());
+                                getMvpView().updateAllDeleteTime(timeElapsed.longValue());
                                 Log.d(TAG, "deleteDatabase: " + index.get());
                                 index.getAndIncrement();
                             }

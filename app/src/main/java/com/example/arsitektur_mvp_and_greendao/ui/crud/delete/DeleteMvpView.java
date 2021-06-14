@@ -9,7 +9,11 @@ public interface DeleteMvpView extends MvpView {
 
     void updateNumOfRecordDelete(Long numOfRecord);
 
-    void updateExecutionTimeDelete(Long executionTime);
+    void updateDeleteDatabaseTime(Long deleteDatabaseTime);
+
+    void updateAllDeleteTime(Long allDeleteTime);
+
+    void updateViewDeleteTime(Long viewDeleteTime);
 
     void deleteMedicalData(List<Medical> medicalList);
 
