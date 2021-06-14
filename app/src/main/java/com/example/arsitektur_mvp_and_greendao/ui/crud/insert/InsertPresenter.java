@@ -6,6 +6,8 @@ import com.example.arsitektur_mvp_and_greendao.data.DataManager;
 import com.example.arsitektur_mvp_and_greendao.ui.base.BasePresenter;
 import com.example.arsitektur_mvp_and_greendao.utils.rx.SchedulerProvider;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
@@ -23,12 +25,23 @@ public class InsertPresenter<V extends InsertMvpView> extends BasePresenter<V> i
     }
 
     public void insertDatabase(Long numOfData) {
-        long startTime = System.currentTimeMillis();
+        AtomicLong viewInsertTime = new AtomicLong(0);
+        AtomicLong insertDbTime = new AtomicLong(0);
+        AtomicLong insertTime = new AtomicLong(0);
+        AtomicLong allInsertTime = new AtomicLong(System.currentTimeMillis());
         //Insert Hospital JSON to DB
         getCompositeDisposable().add(getDataManager()
                 .seedDatabaseHospital(numOfData)
                 .concatMap(Flowable::fromIterable)
-                .concatMap(hospital -> getDataManager().insertHospital(hospital))
+                .concatMap(hospital -> {
+                    insertTime.set(System.currentTimeMillis());
+                    return getDataManager().insertHospital(hospital);
+                })
+                .doOnNext(aBoolean -> {
+                    if (aBoolean) {
+                        insertDbTime.set(insertDbTime.longValue() + (System.currentTimeMillis() - insertTime.longValue()));
+                    }
+                })
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(aBoolean -> {
                         } , throwable -> getMvpView().onError(throwable.getMessage())
@@ -38,16 +51,27 @@ public class InsertPresenter<V extends InsertMvpView> extends BasePresenter<V> i
         getCompositeDisposable().add(getDataManager()
                 .seedDatabaseMedicine(numOfData)
                 .concatMap(Flowable::fromIterable)
-                .concatMap(medicine -> getDataManager().insertMedicine(medicine))
+                .concatMap(medicine -> {
+                    insertTime.set(System.currentTimeMillis());
+                    return getDataManager().insertMedicine(medicine);
+                })
+                .doOnNext(aBoolean -> {
+                    if (aBoolean) {
+                        insertDbTime.set(insertDbTime.longValue() + (System.currentTimeMillis() - insertTime.longValue()));
+                    }
+                })
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(aBoolean -> {
                             if (!isViewAttached())
                                 return;
                             if (aBoolean) {
                                 getMvpView().updateNumOfRecordInsert(numOfData);
-                                long endTime = System.currentTimeMillis();
-                                long timeElapsed = endTime - startTime; //In MilliSeconds
-                                getMvpView().updateExecutionTimeInsert(timeElapsed);
+                                getMvpView().updateInsertDatabaseTime(insertDbTime.longValue()); //Change execution time
+                                AtomicLong endTime = new AtomicLong(System.currentTimeMillis());
+                                AtomicLong timeElapsed = new AtomicLong(endTime.longValue() - allInsertTime.longValue());
+                                viewInsertTime.set(timeElapsed.get() - insertDbTime.longValue());
+                                getMvpView().updateViewInsertTime(viewInsertTime.longValue());
+                                getMvpView().updateAllInsertTime(timeElapsed.longValue());
                             }
                         } , throwable -> Log.d(TAG, "insertDatabase: " + throwable.getMessage())
                 )

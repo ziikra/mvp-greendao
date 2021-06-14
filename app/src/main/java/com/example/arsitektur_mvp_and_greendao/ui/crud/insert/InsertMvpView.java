@@ -8,7 +8,11 @@ import java.util.List;
 public interface InsertMvpView extends MvpView {
     void updateNumOfRecordInsert(Long numOfRecord);
 
-    void updateExecutionTimeInsert(Long executionTime);
+    void updateInsertDatabaseTime(Long insertDatabaseTime);
+
+    void updateAllInsertTime(Long allInsertTime);
+
+    void updateViewInsertTime(Long viewInsertTime);
 
     void insertMedicalData(List<Medical> medicalList);
 

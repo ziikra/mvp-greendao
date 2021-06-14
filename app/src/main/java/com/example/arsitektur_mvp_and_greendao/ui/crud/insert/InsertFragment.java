@@ -47,7 +47,11 @@ public class InsertFragment extends BaseFragment implements InsertMvpView, Inser
 
     TextView mNumOfRecord;
 
-    TextView mExecutionTime;
+    TextView mInsertDatabaseTime;
+
+    TextView mAllInsertTime;
+
+    TextView mViewInsertTime;
 
     EditText mEditTextNumData;
 
@@ -64,7 +68,9 @@ public class InsertFragment extends BaseFragment implements InsertMvpView, Inser
     protected void setUp(View view) {
         this.mRecyclerView = view.findViewById(R.id.insertRecyclerView);
         this.mNumOfRecord = view.findViewById(R.id.textViewRecord);
-        this.mExecutionTime = view.findViewById(R.id.textViewTime);
+        this.mInsertDatabaseTime = view.findViewById(R.id.textViewTimeInsertDB);
+        this.mAllInsertTime = view.findViewById(R.id.textViewTimeInsertAll);
+        this.mViewInsertTime = view.findViewById(R.id.textViewTimeInsertView);
         this.mEditTextNumData = view.findViewById(R.id.editTextNumData);
         this.btnExecute = view.findViewById(R.id.btnExecute);
         this.progressBar = view.findViewById(R.id.progressBar);
@@ -115,8 +121,18 @@ public class InsertFragment extends BaseFragment implements InsertMvpView, Inser
     }
 
     @Override
-    public void updateExecutionTimeInsert(Long executionTime) {
-        this.mExecutionTime.setText("TIME (MS) : " + executionTime.toString());
+    public void updateInsertDatabaseTime(Long insertDatabaseTime) {
+        this.mInsertDatabaseTime.setText("TIME DB (MS) : " + insertDatabaseTime.toString());
+    }
+
+    @Override
+    public void updateAllInsertTime(Long allInsertTime) {
+        this.mAllInsertTime.setText("TIME ALL (MS) : " + allInsertTime.toString());
+    }
+
+    @Override
+    public void updateViewInsertTime(Long viewInsertTime) {
+        this.mViewInsertTime.setText("TIME VIEW (MS) : " + viewInsertTime.toString());
     }
 
     @Override
