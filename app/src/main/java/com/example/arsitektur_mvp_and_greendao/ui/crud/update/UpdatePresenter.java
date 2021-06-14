@@ -7,6 +7,7 @@ import com.example.arsitektur_mvp_and_greendao.ui.base.BasePresenter;
 import com.example.arsitektur_mvp_and_greendao.utils.rx.SchedulerProvider;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.inject.Inject;
 
@@ -26,7 +27,10 @@ public class UpdatePresenter<V extends UpdateMvpView> extends BasePresenter<V> i
     }
 
     public void updateDatabase(Long numOfData) {
-        long startTime = System.currentTimeMillis();
+        AtomicLong viewUpdateTime = new AtomicLong(0);
+        AtomicLong updateDbTime = new AtomicLong(0);
+        AtomicLong updateTime = new AtomicLong(0);
+        AtomicLong allUpdateTime = new AtomicLong(System.currentTimeMillis());
         AtomicInteger index = new AtomicInteger(0);
         getCompositeDisposable().add(getDataManager()
                 //Get All Hospital with Limit
@@ -49,17 +53,28 @@ public class UpdatePresenter<V extends UpdateMvpView> extends BasePresenter<V> i
                     }
                     return Flowable.fromIterable(medicineList);
                 })
-                .concatMap(medicine -> getDataManager().updateDatabaseMedicine(medicine))
+                .concatMap(medicine -> {
+                    updateTime.set(System.currentTimeMillis());
+                    return getDataManager().updateDatabaseMedicine(medicine);
+                })
+                .doOnNext(aBoolean -> {
+                    if (aBoolean)
+                        updateDbTime.set(updateDbTime.longValue() + (System.currentTimeMillis() - updateTime.longValue()));
+                })
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(aBoolean -> {
                             if (!isViewAttached())
                                 return;
                             if (index.get() == numOfData) {
                                 getMvpView().updateNumOfRecordUpdate(index.longValue()); //Change number of record
-                                long endTime = System.currentTimeMillis();
-                                long timeElapsed = endTime - startTime; //In MilliSeconds
-                                getMvpView().updateExecutionTimeUpdate(timeElapsed); //Change execution time
-                                Log.d(TAG, "updateDatabase: " + index.get());
+                                getMvpView().updateNumOfRecordUpdate(index.longValue());
+                                getMvpView().updateUpdateDatabaseTime(updateDbTime.longValue()); //Change execution time
+                                AtomicLong endTime = new AtomicLong(System.currentTimeMillis());
+                                AtomicLong timeElapsed = new AtomicLong(endTime.longValue() - allUpdateTime.longValue());
+                                viewUpdateTime.set(timeElapsed.get() - updateDbTime.longValue());
+                                getMvpView().updateViewUpdateTime(viewUpdateTime.longValue());
+                                getMvpView().updateAllUpdateTime(timeElapsed.longValue());
+                                Log.d(TAG, "updateDatabase: " + index.longValue());
                                 index.getAndIncrement();
                             }
                         }, throwable -> Log.d(TAG, "updateDatabase: " + throwable.getMessage())
