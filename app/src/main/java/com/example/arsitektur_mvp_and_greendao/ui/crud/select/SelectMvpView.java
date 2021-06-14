@@ -8,7 +8,11 @@ import java.util.List;
 public interface SelectMvpView extends MvpView {
     void updateNumOfRecordSelect(Long numOfRecord);
 
-    void updateExecutionTimeSelect(Long executionTime);
+    void updateSelectDatabaseTime(Long selectDatabaseTime);
+
+    void updateAllSelectTime(Long allSelectTime);
+
+    void updateViewSelectTime(Long viewSelectTime);
 
     void selectMedicalData(List<Medical> medicalList);
 

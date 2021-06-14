@@ -47,7 +47,11 @@ public class SelectFragment extends BaseFragment implements SelectMvpView, Selec
 
     TextView mNumOfRecord;
 
-    TextView mExecutionTime;
+    TextView mSelectDatabaseTime;
+
+    TextView mAllSelectTime;
+
+    TextView mViewSelectTime;
 
     EditText mEditTextNumData;
 
@@ -64,7 +68,9 @@ public class SelectFragment extends BaseFragment implements SelectMvpView, Selec
     protected void setUp(View view) {
         this.mRecyclerView = view.findViewById(R.id.selectRecyclerView);
         this.mNumOfRecord = view.findViewById(R.id.textViewRecord);
-        this.mExecutionTime = view.findViewById(R.id.textViewTime);
+        this.mSelectDatabaseTime = view.findViewById(R.id.textViewTimeSelectDB);
+        this.mAllSelectTime = view.findViewById(R.id.textViewTimeSelectAll);
+        this.mViewSelectTime = view.findViewById(R.id.textViewTimeSelectView);
         this.mEditTextNumData = view.findViewById(R.id.editTextNumData);
         this.btnExecute = view.findViewById(R.id.btnExecute);
         this.floatingActionButton = view.findViewById(R.id.fabDown);
@@ -130,8 +136,18 @@ public class SelectFragment extends BaseFragment implements SelectMvpView, Selec
     }
 
     @Override
-    public void updateExecutionTimeSelect(Long executionTime){
-        this.mExecutionTime.setText("TIME (MS) : " + executionTime.toString());
+    public void updateSelectDatabaseTime(Long selectDatabaseTime) {
+        this.mSelectDatabaseTime.setText("TIME DB (MS) : " + selectDatabaseTime.toString());
+    }
+
+    @Override
+    public void updateAllSelectTime(Long allSelectTime) {
+        this.mAllSelectTime.setText("TIME ALL (MS) : " + allSelectTime.toString());
+    }
+
+    @Override
+    public void updateViewSelectTime(Long viewSelectTime) {
+        this.mViewSelectTime.setText("TIME VIEW (MS) : " + viewSelectTime.toString());
     }
 
     @Override
