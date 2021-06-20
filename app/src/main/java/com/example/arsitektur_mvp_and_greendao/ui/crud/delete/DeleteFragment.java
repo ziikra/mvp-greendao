@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.arsitektur_mvp_and_greendao.R;
+import com.example.arsitektur_mvp_and_greendao.data.others.ExecutionTimePreference;
 import com.example.arsitektur_mvp_and_greendao.data.others.Medical;
 import com.example.arsitektur_mvp_and_greendao.di.component.ActivityComponent;
 import com.example.arsitektur_mvp_and_greendao.ui.base.BaseFragment;
@@ -44,6 +45,8 @@ public class DeleteFragment extends BaseFragment implements DeleteMvpView, Delet
 
     RecyclerView mRecyclerView;
 
+    ExecutionTimePreference executionTimePreference;
+
     TextView mNumOfRecord;
 
     TextView mDeleteDatabaseTime;
@@ -56,7 +59,7 @@ public class DeleteFragment extends BaseFragment implements DeleteMvpView, Delet
 
     Button btnExecute;
 
-    public static DeleteFragment newInstance(){
+    public static DeleteFragment newInstance() {
         DeleteFragment fragment = new DeleteFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -80,7 +83,7 @@ public class DeleteFragment extends BaseFragment implements DeleteMvpView, Delet
                 if (mEditTextNumData.getText() != null) {
                     try {
                         Long numOfData = Long.valueOf(mEditTextNumData.getText().toString());
-                        mPresenter.onDeleteExecuteClick(numOfData);
+                        mPresenter.onDeleteExecuteClick(executionTimePreference, numOfData);
                     } catch (Exception e) {
                         Toast.makeText(getContext(), "Num Of Data is Not Valid", Toast.LENGTH_SHORT).show();
                     }
@@ -95,6 +98,23 @@ public class DeleteFragment extends BaseFragment implements DeleteMvpView, Delet
         this.mRecyclerView.setLayoutManager(mLayoutManager);
         this.mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         this.mRecyclerView.setAdapter(mDeleteAdapter);
+
+        if (!executionTimePreference.getExecutionTime().getDatabaseDeleteTime().isEmpty())
+            this.mDeleteDatabaseTime
+                    .setText("TIME DB (MS) : " +
+                            executionTimePreference.getExecutionTime().getDatabaseDeleteTime());
+        if (!executionTimePreference.getExecutionTime().getAllDeleteTime().isEmpty())
+            this.mAllDeleteTime
+                    .setText("TIME ALL (MS) : " +
+                            executionTimePreference.getExecutionTime().getAllDeleteTime());
+        if (!executionTimePreference.getExecutionTime().getViewDeleteTime().isEmpty())
+            this.mViewDeleteTime
+                    .setText("TIME VIEW (MS) : " +
+                            executionTimePreference.getExecutionTime().getViewDeleteTime());
+        if (!executionTimePreference.getExecutionTime().getNumOfRecordDelete().isEmpty())
+            this.mNumOfRecord
+                    .setText("RECORD : " +
+                            executionTimePreference.getExecutionTime().getNumOfRecordDelete());
     }
 
     @Override
@@ -107,6 +127,8 @@ public class DeleteFragment extends BaseFragment implements DeleteMvpView, Delet
             component.inject(this);
             this.mPresenter.onAttach(this);
             this.mDeleteAdapter.setCallback(this);
+
+            this.executionTimePreference = new ExecutionTimePreference(getBaseActivity());
         }
         return view;
     }

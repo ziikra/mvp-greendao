@@ -3,6 +3,8 @@ package com.example.arsitektur_mvp_and_greendao.ui.crud.delete;
 import android.util.Log;
 
 import com.example.arsitektur_mvp_and_greendao.data.DataManager;
+import com.example.arsitektur_mvp_and_greendao.data.others.ExecutionTime;
+import com.example.arsitektur_mvp_and_greendao.data.others.ExecutionTimePreference;
 import com.example.arsitektur_mvp_and_greendao.ui.base.BasePresenter;
 import com.example.arsitektur_mvp_and_greendao.utils.rx.SchedulerProvider;
 
@@ -25,7 +27,7 @@ public class DeletePresenter <V extends DeleteMvpView> extends BasePresenter<V> 
         super(mDataManager, mSchedulerProvider, mCompositeDisposable);
     }
 
-    public void deleteDatabase(Long numOfData){
+    public void deleteDatabase(ExecutionTimePreference executionTimePreference, Long numOfData) {
         AtomicLong viewDeleteTime = new AtomicLong(0);
         AtomicLong deleteDbTime = new AtomicLong(0);
         AtomicLong deleteTime = new AtomicLong(0);
@@ -68,6 +70,14 @@ public class DeletePresenter <V extends DeleteMvpView> extends BasePresenter<V> 
                                 viewDeleteTime.set(timeElapsed.get() - deleteDbTime.longValue());
                                 getMvpView().updateViewDeleteTime(viewDeleteTime.longValue());
                                 getMvpView().updateAllDeleteTime(timeElapsed.longValue());
+
+                                ExecutionTime executionTime = executionTimePreference.getExecutionTime();
+                                executionTime.setDatabaseDeleteTime(deleteDbTime.toString());
+                                executionTime.setAllDeleteTime(timeElapsed.toString());
+                                executionTime.setViewDeleteTime(viewDeleteTime.toString());
+                                executionTime.setNumOfRecordDelete(numOfData.toString());
+                                executionTimePreference.setExecutionTime(executionTime);
+
                                 Log.d(TAG, "deleteDatabase: " + index.get());
                                 index.getAndIncrement();
                             }
@@ -77,7 +87,7 @@ public class DeletePresenter <V extends DeleteMvpView> extends BasePresenter<V> 
     }
 
     @Override
-    public void onDeleteExecuteClick(Long numOfData) {
-        deleteDatabase(numOfData);
+    public void onDeleteExecuteClick(ExecutionTimePreference executionTimePreference, Long numOfData) {
+        deleteDatabase(executionTimePreference, numOfData);
     }
 }
