@@ -1,7 +1,6 @@
 package com.example.arsitektur_mvp_and_greendao.ui.crud.insert;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.arsitektur_mvp_and_greendao.R;
+import com.example.arsitektur_mvp_and_greendao.data.others.ExecutionTimePreference;
 import com.example.arsitektur_mvp_and_greendao.data.others.Medical;
 import com.example.arsitektur_mvp_and_greendao.di.component.ActivityComponent;
 import com.example.arsitektur_mvp_and_greendao.ui.base.BaseFragment;
@@ -44,6 +44,8 @@ public class InsertFragment extends BaseFragment implements InsertMvpView, Inser
     ContentLoadingProgressBar progressBar;
 
     RecyclerView mRecyclerView;
+
+    ExecutionTimePreference executionTimePreference;
 
     TextView mNumOfRecord;
 
@@ -81,7 +83,7 @@ public class InsertFragment extends BaseFragment implements InsertMvpView, Inser
                 if (mEditTextNumData.getText() != null) {
                     try {
                         Long numOfData = Long.valueOf(mEditTextNumData.getText().toString());
-                        mPresenter.onInsertExecuteClick(numOfData);
+                        mPresenter.onInsertExecuteClick(executionTimePreference, numOfData);
                     } catch (Exception e) {
                         Toast.makeText(getContext(), "Num Of Data is Not Valid", Toast.LENGTH_SHORT).show();
                     }
@@ -96,16 +98,37 @@ public class InsertFragment extends BaseFragment implements InsertMvpView, Inser
         this.mRecyclerView.setLayoutManager(mLayoutManager);
         this.mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         this.mRecyclerView.setAdapter(mInsertAdapter);
+
+        if (!executionTimePreference.getExecutionTime().getDatabaseInsertTime().isEmpty())
+            this.mInsertDatabaseTime
+                    .setText("TIME DB (MS) : " +
+                            executionTimePreference.getExecutionTime().getDatabaseInsertTime());
+        if (!executionTimePreference.getExecutionTime().getAllInsertTime().isEmpty())
+            this.mAllInsertTime
+                    .setText("TIME ALL (MS) : " +
+                            executionTimePreference.getExecutionTime().getAllInsertTime());
+        if (!executionTimePreference.getExecutionTime().getViewInsertTime().isEmpty())
+            this.mViewInsertTime
+                    .setText("TIME VIEW (MS) : " +
+                            executionTimePreference.getExecutionTime().getViewInsertTime());
+        if (!executionTimePreference.getExecutionTime().getNumOfRecordInsert().isEmpty())
+            this.mNumOfRecord
+                    .setText("RECORD : " +
+                            executionTimePreference.getExecutionTime().getNumOfRecordInsert());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_insert, container, false);
+
         ActivityComponent component = getActivityComponent();
         if (component != null) {
             component.inject(this);
             this.mPresenter.onAttach(this);
             this.mInsertAdapter.setCallback(this);
+
+            this.executionTimePreference = new ExecutionTimePreference(getBaseActivity());
         }
         return view;
     }

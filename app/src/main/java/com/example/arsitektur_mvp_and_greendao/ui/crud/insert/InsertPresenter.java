@@ -3,6 +3,8 @@ package com.example.arsitektur_mvp_and_greendao.ui.crud.insert;
 import android.util.Log;
 
 import com.example.arsitektur_mvp_and_greendao.data.DataManager;
+import com.example.arsitektur_mvp_and_greendao.data.others.ExecutionTime;
+import com.example.arsitektur_mvp_and_greendao.data.others.ExecutionTimePreference;
 import com.example.arsitektur_mvp_and_greendao.ui.base.BasePresenter;
 import com.example.arsitektur_mvp_and_greendao.utils.rx.SchedulerProvider;
 
@@ -24,7 +26,7 @@ public class InsertPresenter<V extends InsertMvpView> extends BasePresenter<V> i
         super(mDataManager, mSchedulerProvider, mCompositeDisposable);
     }
 
-    public void insertDatabase(Long numOfData) {
+    public void insertDatabase(ExecutionTimePreference executionTimePreference, Long numOfData) {
         AtomicLong viewInsertTime = new AtomicLong(0);
         AtomicLong insertDbTime = new AtomicLong(0);
         AtomicLong insertTime = new AtomicLong(0);
@@ -72,6 +74,13 @@ public class InsertPresenter<V extends InsertMvpView> extends BasePresenter<V> i
                                 viewInsertTime.set(timeElapsed.get() - insertDbTime.longValue());
                                 getMvpView().updateViewInsertTime(viewInsertTime.longValue());
                                 getMvpView().updateAllInsertTime(timeElapsed.longValue());
+
+                                ExecutionTime executionTime = executionTimePreference.getExecutionTime();
+                                executionTime.setDatabaseInsertTime(insertDbTime.toString());
+                                executionTime.setAllInsertTime(timeElapsed.toString());
+                                executionTime.setViewInsertTime(viewInsertTime.toString());
+                                executionTime.setNumOfRecordInsert(numOfData.toString());
+                                executionTimePreference.setExecutionTime(executionTime);
                             }
                         } , throwable -> Log.d(TAG, "insertDatabase: " + throwable.getMessage())
                 )
@@ -79,7 +88,7 @@ public class InsertPresenter<V extends InsertMvpView> extends BasePresenter<V> i
     }
 
     @Override
-    public void onInsertExecuteClick(Long numOfData) {
-        insertDatabase(numOfData);
+    public void onInsertExecuteClick(ExecutionTimePreference executionTimePreference, Long numOfData) {
+        insertDatabase(executionTimePreference, numOfData);
     }
 }
