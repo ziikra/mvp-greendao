@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.arsitektur_mvp_and_greendao.R;
+import com.example.arsitektur_mvp_and_greendao.data.others.ExecutionTimePreference;
 import com.example.arsitektur_mvp_and_greendao.data.others.Medical;
 import com.example.arsitektur_mvp_and_greendao.di.component.ActivityComponent;
 import com.example.arsitektur_mvp_and_greendao.ui.base.BaseFragment;
@@ -43,6 +44,8 @@ public class UpdateFragment extends BaseFragment implements UpdateMvpView, Updat
     ContentLoadingProgressBar progressBar;
 
     RecyclerView mRecyclerView;
+
+    ExecutionTimePreference executionTimePreference;
 
     TextView mNumOfRecord;
 
@@ -80,7 +83,7 @@ public class UpdateFragment extends BaseFragment implements UpdateMvpView, Updat
                 if (mEditTextNumData.getText() != null) {
                     try {
                         Long numOfData = Long.valueOf(mEditTextNumData.getText().toString());
-                        mPresenter.onUpdateExecuteClick(numOfData);
+                        mPresenter.onUpdateExecuteClick(executionTimePreference, numOfData);
                     } catch (Exception e) {
                         Toast.makeText(getContext(), "Num Of Data is Not Valid", Toast.LENGTH_SHORT).show();
                     }
@@ -95,6 +98,23 @@ public class UpdateFragment extends BaseFragment implements UpdateMvpView, Updat
         this.mRecyclerView.setLayoutManager(mLayoutManager);
         this.mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         this.mRecyclerView.setAdapter(mUpdateAdapter);
+
+        if (!executionTimePreference.getExecutionTime().getDatabaseUpdateTime().isEmpty())
+            this.mUpdateDatabaseTime
+                    .setText("TIME DB (MS) : " +
+                            executionTimePreference.getExecutionTime().getDatabaseUpdateTime());
+        if (!executionTimePreference.getExecutionTime().getAllUpdateTime().isEmpty())
+            this.mAllUpdateTime
+                    .setText("TIME ALL (MS) : " +
+                            executionTimePreference.getExecutionTime().getAllUpdateTime());
+        if (!executionTimePreference.getExecutionTime().getViewUpdateTime().isEmpty())
+            this.mViewUpdateTime
+                    .setText("TIME VIEW (MS) : " +
+                            executionTimePreference.getExecutionTime().getViewUpdateTime());
+        if (!executionTimePreference.getExecutionTime().getNumOfRecordUpdate().isEmpty())
+            this.mNumOfRecord
+                    .setText("RECORD : " +
+                            executionTimePreference.getExecutionTime().getNumOfRecordUpdate());
     }
 
     @Override
@@ -107,6 +127,8 @@ public class UpdateFragment extends BaseFragment implements UpdateMvpView, Updat
             component.inject(this);
             this.mPresenter.onAttach(this);
             this.mUpdateAdapter.setCallback(this);
+
+            this.executionTimePreference = new ExecutionTimePreference(getBaseActivity());
         }
         return view;
     }

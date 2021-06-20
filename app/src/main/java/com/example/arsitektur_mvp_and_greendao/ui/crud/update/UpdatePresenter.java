@@ -3,6 +3,8 @@ package com.example.arsitektur_mvp_and_greendao.ui.crud.update;
 import android.util.Log;
 
 import com.example.arsitektur_mvp_and_greendao.data.DataManager;
+import com.example.arsitektur_mvp_and_greendao.data.others.ExecutionTime;
+import com.example.arsitektur_mvp_and_greendao.data.others.ExecutionTimePreference;
 import com.example.arsitektur_mvp_and_greendao.ui.base.BasePresenter;
 import com.example.arsitektur_mvp_and_greendao.utils.rx.SchedulerProvider;
 
@@ -26,7 +28,7 @@ public class UpdatePresenter<V extends UpdateMvpView> extends BasePresenter<V> i
         super(mDataManager, mSchedulerProvider, mCompositeDisposable);
     }
 
-    public void updateDatabase(Long numOfData) {
+    public void updateDatabase(ExecutionTimePreference executionTimePreference, Long numOfData) {
         AtomicLong viewUpdateTime = new AtomicLong(0);
         AtomicLong updateDbTime = new AtomicLong(0);
         AtomicLong updateTime = new AtomicLong(0);
@@ -66,7 +68,6 @@ public class UpdatePresenter<V extends UpdateMvpView> extends BasePresenter<V> i
                             if (!isViewAttached())
                                 return;
                             if (index.get() == numOfData) {
-                                getMvpView().updateNumOfRecordUpdate(index.longValue()); //Change number of record
                                 getMvpView().updateNumOfRecordUpdate(index.longValue());
                                 getMvpView().updateUpdateDatabaseTime(updateDbTime.longValue()); //Change execution time
                                 AtomicLong endTime = new AtomicLong(System.currentTimeMillis());
@@ -74,6 +75,14 @@ public class UpdatePresenter<V extends UpdateMvpView> extends BasePresenter<V> i
                                 viewUpdateTime.set(timeElapsed.get() - updateDbTime.longValue());
                                 getMvpView().updateViewUpdateTime(viewUpdateTime.longValue());
                                 getMvpView().updateAllUpdateTime(timeElapsed.longValue());
+
+                                ExecutionTime executionTime = executionTimePreference.getExecutionTime();
+                                executionTime.setDatabaseUpdateTime(updateDbTime.toString());
+                                executionTime.setAllUpdateTime(timeElapsed.toString());
+                                executionTime.setViewUpdateTime(viewUpdateTime.toString());
+                                executionTime.setNumOfRecordUpdate(numOfData.toString());
+                                executionTimePreference.setExecutionTime(executionTime);
+
                                 Log.d(TAG, "updateDatabase: " + index.longValue());
                                 index.getAndIncrement();
                             }
@@ -83,7 +92,7 @@ public class UpdatePresenter<V extends UpdateMvpView> extends BasePresenter<V> i
     }
 
     @Override
-    public void onUpdateExecuteClick(Long numOfData) {
-        updateDatabase(numOfData);
+    public void onUpdateExecuteClick(ExecutionTimePreference executionTimePreference, Long numOfData) {
+        updateDatabase(executionTimePreference, numOfData);
     }
 }
