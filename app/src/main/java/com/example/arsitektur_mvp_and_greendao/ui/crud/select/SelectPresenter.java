@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.example.arsitektur_mvp_and_greendao.data.DataManager;
 import com.example.arsitektur_mvp_and_greendao.data.db.model.Medicine;
+import com.example.arsitektur_mvp_and_greendao.data.others.ExecutionTime;
+import com.example.arsitektur_mvp_and_greendao.data.others.ExecutionTimePreference;
 import com.example.arsitektur_mvp_and_greendao.data.others.Medical;
 import com.example.arsitektur_mvp_and_greendao.ui.base.BasePresenter;
 import com.example.arsitektur_mvp_and_greendao.utils.rx.SchedulerProvider;
@@ -29,7 +31,7 @@ public class SelectPresenter<V extends SelectMvpView> extends BasePresenter<V> i
         super(mDataManager, mSchedulerProvider, mCompositeDisposable);
     }
 
-    public void selectDatabase(Long numOfData) {
+    public void selectDatabase(ExecutionTimePreference executionTimePreference, Long numOfData) {
         AtomicLong viewSelectTime = new AtomicLong(0);
         AtomicLong selectDbTime = new AtomicLong(0);
         AtomicLong selectTime = new AtomicLong(0);
@@ -75,6 +77,14 @@ public class SelectPresenter<V extends SelectMvpView> extends BasePresenter<V> i
                         viewSelectTime.set(timeElapsed.get() - selectDbTime.longValue());
                         getMvpView().updateViewSelectTime(viewSelectTime.longValue());
                         getMvpView().updateAllSelectTime(timeElapsed.longValue());
+
+                        ExecutionTime executionTime = executionTimePreference.getExecutionTime();
+                        executionTime.setDatabaseSelectTime(selectDbTime.toString());
+                        executionTime.setAllSelectTime(timeElapsed.toString());
+                        executionTime.setViewSelectTime(viewSelectTime.toString());
+                        executionTime.setNumOfRecordSelect(numOfData.toString());
+                        executionTimePreference.setExecutionTime(executionTime);
+
                         Log.d(TAG, "selectDatabase: " + index.get());
                         index.getAndIncrement();
                     }
@@ -83,7 +93,7 @@ public class SelectPresenter<V extends SelectMvpView> extends BasePresenter<V> i
     }
 
     @Override
-    public void onSelectExecuteClick(Long numOfData){
-        selectDatabase(numOfData);
+    public void onSelectExecuteClick(ExecutionTimePreference executionTimePreference, Long numOfData) {
+        selectDatabase(executionTimePreference, numOfData);
     }
 }

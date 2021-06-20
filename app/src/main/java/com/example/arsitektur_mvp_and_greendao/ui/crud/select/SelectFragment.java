@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.arsitektur_mvp_and_greendao.R;
+import com.example.arsitektur_mvp_and_greendao.data.others.ExecutionTimePreference;
 import com.example.arsitektur_mvp_and_greendao.data.others.Medical;
 import com.example.arsitektur_mvp_and_greendao.di.component.ActivityComponent;
 import com.example.arsitektur_mvp_and_greendao.ui.base.BaseFragment;
@@ -45,6 +46,8 @@ public class SelectFragment extends BaseFragment implements SelectMvpView, Selec
 
     RecyclerView mRecyclerView;
 
+    ExecutionTimePreference executionTimePreference;
+
     TextView mNumOfRecord;
 
     TextView mSelectDatabaseTime;
@@ -57,7 +60,7 @@ public class SelectFragment extends BaseFragment implements SelectMvpView, Selec
 
     Button btnExecute;
 
-    public static SelectFragment newInstance(){
+    public static SelectFragment newInstance() {
         SelectFragment fragment = new SelectFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -82,7 +85,7 @@ public class SelectFragment extends BaseFragment implements SelectMvpView, Selec
                 if (mEditTextNumData.getText() != null) {
                     try {
                         Long numOfData = Long.valueOf(mEditTextNumData.getText().toString());
-                        mPresenter.onSelectExecuteClick(numOfData);
+                        mPresenter.onSelectExecuteClick(executionTimePreference, numOfData);
                     } catch (Exception e) {
                         Toast.makeText(getContext(), "Num Of Data is Not Valid", Toast.LENGTH_SHORT).show();
                     }
@@ -109,6 +112,24 @@ public class SelectFragment extends BaseFragment implements SelectMvpView, Selec
         this.mRecyclerView.setLayoutManager(mLayoutManager);
         this.mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         this.mRecyclerView.setAdapter(mSelectAdapter);
+
+        if (!executionTimePreference.getExecutionTime().getDatabaseSelectTime().isEmpty())
+            this.mSelectDatabaseTime
+                    .setText("TIME DB (MS) : " +
+                            executionTimePreference.getExecutionTime().getDatabaseSelectTime());
+        if (!executionTimePreference.getExecutionTime().getAllSelectTime().isEmpty())
+            this.mAllSelectTime
+                    .setText("TIME ALL (MS) : " +
+                            executionTimePreference.getExecutionTime().getAllSelectTime());
+        if (!executionTimePreference.getExecutionTime().getViewSelectTime().isEmpty())
+            this.mViewSelectTime
+                    .setText("TIME VIEW (MS) : " +
+                            executionTimePreference.getExecutionTime().getViewSelectTime());
+        if (!executionTimePreference.getExecutionTime().getNumOfRecordSelect().isEmpty())
+            this.mNumOfRecord
+                    .setText("RECORD : " +
+                            executionTimePreference.getExecutionTime().getNumOfRecordSelect());
+
     }
 
     @Override
@@ -121,6 +142,8 @@ public class SelectFragment extends BaseFragment implements SelectMvpView, Selec
             component.inject(this);
             this.mPresenter.onAttach(this);
             this.mSelectAdapter.setCallback(this);
+
+            this.executionTimePreference = new ExecutionTimePreference(getBaseActivity());
         }
         return view;
     }
