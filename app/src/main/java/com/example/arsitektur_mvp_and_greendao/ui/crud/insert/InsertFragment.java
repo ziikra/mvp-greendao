@@ -85,11 +85,11 @@ public class InsertFragment extends BaseFragment implements InsertMvpView, Inser
                         Long numOfData = Long.valueOf(mEditTextNumData.getText().toString());
                         mPresenter.onInsertExecuteClick(executionTimePreference, numOfData);
                     } catch (Exception e) {
-                        Toast.makeText(getContext(), "Num Of Data is Not Valid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Amount Of Data is Not Valid", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Log.d(TAG, "onClick: ");
-                    Toast.makeText(getContext(), "Num Of Data is Not Valid", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Amount Of Data is Not Valid", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -113,7 +113,7 @@ public class InsertFragment extends BaseFragment implements InsertMvpView, Inser
                             executionTimePreference.getExecutionTime().getViewInsertTime());
         if (!executionTimePreference.getExecutionTime().getNumOfRecordInsert().isEmpty())
             this.mNumOfRecord
-                    .setText("RECORD : " +
+                    .setText("RECORDS : " +
                             executionTimePreference.getExecutionTime().getNumOfRecordInsert());
     }
 
@@ -140,7 +140,7 @@ public class InsertFragment extends BaseFragment implements InsertMvpView, Inser
 
     @Override
     public void updateNumOfRecordInsert(Long numOfRecord) {
-        this.mNumOfRecord.setText("RECORD : " + numOfRecord.toString());
+        this.mNumOfRecord.setText("RECORDS : " + numOfRecord.toString());
     }
 
     @Override

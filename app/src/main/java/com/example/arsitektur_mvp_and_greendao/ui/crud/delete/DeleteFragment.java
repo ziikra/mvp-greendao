@@ -85,11 +85,11 @@ public class DeleteFragment extends BaseFragment implements DeleteMvpView, Delet
                         Long numOfData = Long.valueOf(mEditTextNumData.getText().toString());
                         mPresenter.onDeleteExecuteClick(executionTimePreference, numOfData);
                     } catch (Exception e) {
-                        Toast.makeText(getContext(), "Num Of Data is Not Valid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Amount Of Data is Not Valid", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Log.d(TAG, "onClick: ");
-                    Toast.makeText(getContext(), "Num Of Data is Not Valid", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Amount Of Data is Not Valid", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -113,7 +113,7 @@ public class DeleteFragment extends BaseFragment implements DeleteMvpView, Delet
                             executionTimePreference.getExecutionTime().getViewDeleteTime());
         if (!executionTimePreference.getExecutionTime().getNumOfRecordDelete().isEmpty())
             this.mNumOfRecord
-                    .setText("RECORD : " +
+                    .setText("RECORDS : " +
                             executionTimePreference.getExecutionTime().getNumOfRecordDelete());
     }
 
@@ -140,7 +140,7 @@ public class DeleteFragment extends BaseFragment implements DeleteMvpView, Delet
 
     @Override
     public void updateNumOfRecordDelete(Long numOfRecord) {
-        this.mNumOfRecord.setText("RECORD : " + numOfRecord.toString());
+        this.mNumOfRecord.setText("RECORDS : " + numOfRecord.toString());
     }
 
     @Override
