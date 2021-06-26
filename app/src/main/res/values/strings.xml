@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Arsitektur MVP dan greenDao</string>
+    <string name="app_name">MVP dan greenDao</string>
     <string name="tab_text_1">INSERT</string>
     <string name="tab_text_2">SELECT</string>
     <string name="tab_text_3">UPDATE</string>
