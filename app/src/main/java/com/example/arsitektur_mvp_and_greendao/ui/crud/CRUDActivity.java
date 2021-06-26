@@ -2,6 +2,7 @@ package com.example.arsitektur_mvp_and_greendao.ui.crud;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -14,11 +15,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.arsitektur_mvp_and_greendao.R;
 import com.example.arsitektur_mvp_and_greendao.data.others.ExecutionTimePreference;
 import com.example.arsitektur_mvp_and_greendao.ui.base.BaseActivity;
+import com.example.arsitektur_mvp_and_greendao.utils.InformationDialogFragment;
 import com.google.android.material.tabs.TabLayout;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -61,6 +65,7 @@ public class CRUDActivity extends BaseActivity {
 
         getActivityComponent().inject(this);
         setUp();
+        showInformationDialog();
     }
 
     @Override
@@ -76,6 +81,9 @@ public class CRUDActivity extends BaseActivity {
         if (drawable instanceof Animatable)
             ((Animatable) drawable).start();
         switch (item.getItemId()) {
+            case R.id.action_info:
+                showInformationDialog();
+                return true;
             case R.id.action_export:
                 HSSFWorkbook hssfWorkbook = new HSSFWorkbook();
                 SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy HH.mm.ss");
@@ -153,6 +161,14 @@ public class CRUDActivity extends BaseActivity {
         }
     }
 
+    private void showInformationDialog() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        InformationDialogFragment dialogFragment = InformationDialogFragment.newInstance();
+        dialogFragment.show(fragmentManager, "information_dialog");
+    }
+
+
     @Override
     protected void setUp() {
         ActivityCompat.requestPermissions(this,
@@ -160,6 +176,8 @@ public class CRUDActivity extends BaseActivity {
                 PackageManager.PERMISSION_GRANTED);
 
         executionTimePreference = new ExecutionTimePreference(this);
+        mToolBar.getOverflowIcon().setColorFilter(
+                ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
         setSupportActionBar(mToolBar);
         mPagerAdapter.setCount(4);
 
