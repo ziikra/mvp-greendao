@@ -19,13 +19,14 @@ public class InsertPresenter<V extends InsertMvpView> extends BasePresenter<V> i
 
     private static final String TAG = "InsertPresenter";
 
-    @Inject
+    @Inject // Penggunaan dependency injection pada instance insert presenter
     public InsertPresenter(DataManager mDataManager,
                            SchedulerProvider mSchedulerProvider,
                            CompositeDisposable mCompositeDisposable) {
         super(mDataManager, mSchedulerProvider, mCompositeDisposable);
     }
 
+    // Method yang digunakan untuk insert data
     public void insertDatabase(ExecutionTimePreference executionTimePreference, Long numOfData) {
         AtomicLong viewInsertTime = new AtomicLong(0);
         AtomicLong insertDbTime = new AtomicLong(0);

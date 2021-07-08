@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.arsitektur_mvp_and_greendao.R;
 import com.example.arsitektur_mvp_and_greendao.data.others.Medical;
 import com.example.arsitektur_mvp_and_greendao.ui.base.BaseViewHolder;
-import com.example.arsitektur_mvp_and_greendao.ui.crud.insert.InsertAdapter;
 
 import java.util.List;
 

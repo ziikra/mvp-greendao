@@ -1,7 +1,5 @@
 package com.example.arsitektur_mvp_and_greendao.data.db;
 
-import androidx.constraintlayout.helper.widget.Flow;
-
 import com.example.arsitektur_mvp_and_greendao.data.db.model.Hospital;
 import com.example.arsitektur_mvp_and_greendao.data.db.model.Medicine;
 

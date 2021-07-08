@@ -30,13 +30,13 @@ public class InsertFragment extends BaseFragment implements InsertMvpView, Inser
 
     private static final String TAG = "InsertFragment";
 
-    @Inject
+    @Inject //Penggunaan dependency injection untuk presenter insert
     @Named("insertPresenter")
-    InsertPresenter<InsertMvpView> mPresenter;
+    InsertPresenter<InsertMvpView> mPresenter; //Deklarasi Presenter pada view Insert
 
-    @Inject
+    @Inject //Penggunaan dependency injection untuk adapter insert
     @Named("insertAdapter")
-    InsertAdapter mInsertAdapter;
+    InsertAdapter mInsertAdapter; //Deklarasi Adapter pada view Insert
 
     @Inject
     LinearLayoutManager mLayoutManager;

@@ -20,13 +20,14 @@ public class DeletePresenter <V extends DeleteMvpView> extends BasePresenter<V> 
 
     private static final String TAG = "DeletePresenter";
 
-    @Inject
+    @Inject // Penggunaan dependency injection pada instance delete presenter
     public DeletePresenter(DataManager mDataManager,
                            SchedulerProvider mSchedulerProvider,
                            CompositeDisposable mCompositeDisposable) {
         super(mDataManager, mSchedulerProvider, mCompositeDisposable);
     }
 
+    // Method yang digunakan untuk delete data
     public void deleteDatabase(ExecutionTimePreference executionTimePreference, Long numOfData) {
         AtomicLong viewDeleteTime = new AtomicLong(0);
         AtomicLong deleteDbTime = new AtomicLong(0);

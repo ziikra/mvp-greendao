@@ -21,13 +21,14 @@ public class UpdatePresenter<V extends UpdateMvpView> extends BasePresenter<V> i
 
     private static final String TAG = "UpdatePresenter";
 
-    @Inject
+    @Inject // Penggunaan dependency injection pada instance update presenter
     public UpdatePresenter(DataManager mDataManager,
                            SchedulerProvider mSchedulerProvider,
                            CompositeDisposable mCompositeDisposable) {
         super(mDataManager, mSchedulerProvider, mCompositeDisposable);
     }
 
+    // Method yang digunakan untuk update data
     public void updateDatabase(ExecutionTimePreference executionTimePreference, Long numOfData) {
         AtomicLong viewUpdateTime = new AtomicLong(0);
         AtomicLong updateDbTime = new AtomicLong(0);

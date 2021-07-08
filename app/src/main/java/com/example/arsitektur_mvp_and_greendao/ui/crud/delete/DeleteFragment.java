@@ -30,13 +30,13 @@ public class DeleteFragment extends BaseFragment implements DeleteMvpView, Delet
 
     private static final String TAG = "DeleteFragment";
 
-    @Inject
+    @Inject //Penggunaan dependency injection untuk presenter delete
     @Named("deletePresenter")
-    DeletePresenter<DeleteMvpView> mPresenter;
+    DeletePresenter<DeleteMvpView> mPresenter; //Deklarasi Presenter pada view Delete
 
-    @Inject
+    @Inject //Penggunaan dependency injection untuk adapter delete
     @Named("deleteAdapter")
-    DeleteAdapter mDeleteAdapter;
+    DeleteAdapter mDeleteAdapter; //Deklarasi Adapter pada view Delete
 
     @Inject
     LinearLayoutManager mLayoutManager;

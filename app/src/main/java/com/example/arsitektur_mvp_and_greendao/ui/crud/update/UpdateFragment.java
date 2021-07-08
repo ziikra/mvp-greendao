@@ -30,13 +30,13 @@ public class UpdateFragment extends BaseFragment implements UpdateMvpView, Updat
 
     private static final String TAG = "UpdateFragment";
 
-    @Inject
+    @Inject //Penggunaan dependency injection untuk presenter update
     @Named("updatePresenter")
-    UpdatePresenter<UpdateMvpView> mPresenter;
+    UpdatePresenter<UpdateMvpView> mPresenter; //Deklarasi Presenter pada view Update
 
-    @Inject
+    @Inject //Penggunaan dependency injection untuk adapter update
     @Named("updateAdapter")
-    UpdateAdapter mUpdateAdapter;
+    UpdateAdapter mUpdateAdapter; //Deklarasi Adapter pada view Update
 
     @Inject
     LinearLayoutManager mLayoutManager;

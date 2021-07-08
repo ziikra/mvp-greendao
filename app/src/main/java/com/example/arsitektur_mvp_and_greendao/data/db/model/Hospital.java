@@ -12,29 +12,31 @@ import org.greenrobot.greendao.annotation.ToMany;
 import java.util.List;
 import org.greenrobot.greendao.DaoException;
 
+// Model dari Object Hospital
 @Entity(nameInDb = "hospitals")
 public class Hospital {
 
+    // Attribute id berupa integer (long)
     @Expose
-    @SerializedName("id")
-    @Id
-    private Long id;
+    @SerializedName("id") // Pemrosesan konversi file json ke dalam objek
+    @Id // Annotation untuk menyatakan attribut ini sebagai id
+    private Long id; // atau primary key
 
     @Expose
     @SerializedName("hospitalName")
-    @Property(nameInDb = "name")
-    private String name;
+    @Property(nameInDb = "name") // Annotation untuk menyatakan
+    private String name; // attribut ini merupakan property
 
-    @ToMany(referencedJoinProperty = "hospitalId")
-    private List<Medicine> medicineList;
+    @ToMany(referencedJoinProperty = "hospitalId")  //Annotation untuk menyatakan satu object hospital
+    private List<Medicine> medicineList;            //memiliki banyak medicine dengan foreign key hospitalId
 
     /** Used to resolve relations */
     @Generated(hash = 2040040024)
-    private transient DaoSession daoSession;
+    private transient DaoSession daoSession;    //Hasil generate otomatis dari library greendao untuk annotation ToMany
 
     /** Used for active entity operations. */
     @Generated(hash = 679648518)
-    private transient HospitalDao myDao;
+    private transient HospitalDao myDao;        //Hasil generate otomatis dari library greendao untuk annotation ToMany
 
     @Generated(hash = 714822730)
     public Hospital(Long id, String name) {

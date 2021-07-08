@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,13 +28,14 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 public class SelectFragment extends BaseFragment implements SelectMvpView, SelectAdapter.Callback {
-    @Inject
-    @Named("selectPresenter")
-    SelectPresenter<SelectMvpView> mPresenter;
 
-    @Inject
+    @Inject //Penggunaan dependency injection untuk presenter select
+    @Named("selectPresenter")
+    SelectPresenter<SelectMvpView> mPresenter; //Deklarasi Presenter pada view Select
+
+    @Inject //Penggunaan dependency injection untuk adapter select
     @Named("selectAdapter")
-    SelectAdapter mSelectAdapter;
+    SelectAdapter mSelectAdapter; //Deklarasi Adapter pada view Select
 
     @Inject
     LinearLayoutManager mLayoutManager;

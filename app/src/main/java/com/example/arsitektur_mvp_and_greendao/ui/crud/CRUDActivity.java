@@ -183,10 +183,10 @@ public class CRUDActivity extends BaseActivity {
 
         mViewPager.setAdapter(mPagerAdapter);
 
-        mTabLayout.addTab(mTabLayout.newTab().setText("INSERT"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("SELECT"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("UPDATE"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("DELETE"));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.tab_text_1));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.tab_text_2));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.tab_text_3));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.tab_text_4));
 
         mViewPager.setOffscreenPageLimit(mTabLayout.getTabCount());
 
