@@ -22,6 +22,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.arsitektur_mvp_and_greendao.R;
 import com.example.arsitektur_mvp_and_greendao.data.others.ExecutionTimePreference;
 import com.example.arsitektur_mvp_and_greendao.ui.base.BaseActivity;
+import com.example.arsitektur_mvp_and_greendao.utils.CommonUtils;
 import com.example.arsitektur_mvp_and_greendao.utils.InformationDialogFragment;
 import com.google.android.material.tabs.TabLayout;
 
@@ -86,9 +87,7 @@ public class CRUDActivity extends BaseActivity {
                 return true;
             case R.id.action_export:
                 HSSFWorkbook hssfWorkbook = new HSSFWorkbook();
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy HH.mm.ss");
-                Date date = new Date();
-                HSSFSheet hssfSheet = hssfWorkbook.createSheet(formatter.format(date));
+                HSSFSheet hssfSheet = hssfWorkbook.createSheet(CommonUtils.getTimeStamp());
 
                 List<List<String>> listExecutionTime = new ArrayList<>();
                 List<String> dataExecutionTime = new ArrayList<>();
