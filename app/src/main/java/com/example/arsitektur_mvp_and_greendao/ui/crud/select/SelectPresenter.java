@@ -69,26 +69,24 @@ public class SelectPresenter<V extends SelectMvpView> extends BasePresenter<V> i
                 .subscribe(medicalList -> {
                     if (!isViewAttached())
                         return;
-                    if (medicalList != null && index.get() == numOfData) {
-                        getMvpView().selectMedicalData(medicalList); //Change data list
-                        getMvpView().updateNumOfRecordSelect(index.longValue());
-                        getMvpView().updateSelectDatabaseTime(selectDbTime.longValue()); //Change execution time
-                        AtomicLong endTime = new AtomicLong(System.currentTimeMillis());
-                        AtomicLong timeElapsed = new AtomicLong(endTime.longValue() - allSelectTime.longValue());
-                        viewSelectTime.set(timeElapsed.get() - selectDbTime.longValue());
-                        getMvpView().updateViewSelectTime(viewSelectTime.longValue());
-                        getMvpView().updateAllSelectTime(timeElapsed.longValue());
+                    getMvpView().selectMedicalData(medicalList); //Change data list
+                    getMvpView().updateNumOfRecordSelect(index.longValue());
+                    getMvpView().updateSelectDatabaseTime(selectDbTime.longValue()); //Change execution time
+                    AtomicLong endTime = new AtomicLong(System.currentTimeMillis());
+                    AtomicLong timeElapsed = new AtomicLong(endTime.longValue() - allSelectTime.longValue());
+                    viewSelectTime.set(timeElapsed.get() - selectDbTime.longValue());
+                    getMvpView().updateViewSelectTime(viewSelectTime.longValue());
+                    getMvpView().updateAllSelectTime(timeElapsed.longValue());
 
-                        ExecutionTime executionTime = executionTimePreference.getExecutionTime();
-                        executionTime.setDatabaseSelectTime(selectDbTime.toString());
-                        executionTime.setAllSelectTime(timeElapsed.toString());
-                        executionTime.setViewSelectTime(viewSelectTime.toString());
-                        executionTime.setNumOfRecordSelect(numOfData.toString());
-                        executionTimePreference.setExecutionTime(executionTime);
+                    ExecutionTime executionTime = executionTimePreference.getExecutionTime();
+                    executionTime.setDatabaseSelectTime(selectDbTime.toString());
+                    executionTime.setAllSelectTime(timeElapsed.toString());
+                    executionTime.setViewSelectTime(viewSelectTime.toString());
+                    executionTime.setNumOfRecordSelect(numOfData.toString());
+                    executionTimePreference.setExecutionTime(executionTime);
 
-                        Log.d(TAG, "selectDatabase: " + index.get());
-                        index.getAndIncrement();
-                    }
+                    Log.d(TAG, "selectDatabase: " + index.get());
+                    index.getAndIncrement();
                 }, throwable -> Log.d(TAG, "selectDatabase: " + throwable.getMessage()))
         );
     }
