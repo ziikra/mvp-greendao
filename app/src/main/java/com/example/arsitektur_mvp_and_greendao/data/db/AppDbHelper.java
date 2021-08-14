@@ -24,10 +24,10 @@ public class AppDbHelper implements DbHelper {
         daoSession = new DaoMaster(dbOpenHelper.getWritableDb()).newSession();
     }
     @Override
-    public Flowable<Boolean> insertHospital(Hospital hospital) {
+    public Flowable<Boolean> insertHospitals(List<Hospital> hospitals) {
         return Flowable.fromCallable(() -> {
             try {
-                daoSession.getHospitalDao().insertOrReplace(hospital);
+                daoSession.getHospitalDao().insertOrReplaceInTx(hospitals);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -37,10 +37,10 @@ public class AppDbHelper implements DbHelper {
     }
 
     @Override
-    public Flowable<Boolean> insertMedicine(Medicine medicine) {
+    public Flowable<Boolean> insertMedicines(List<Medicine> medicines) {
         return Flowable.fromCallable(() -> {
             try {
-                daoSession.getMedicineDao().insertOrReplace(medicine);
+                daoSession.getMedicineDao().insertOrReplaceInTx(medicines);
                 return true;
             } catch (Exception e){
                 e.printStackTrace();
@@ -50,12 +50,10 @@ public class AppDbHelper implements DbHelper {
     }
 
     @Override
-    public Flowable<Boolean> deleteHospital(Hospital hospital) {
+    public Flowable<Boolean> deleteHospitals(List<Hospital> hospitals) {
         return Flowable.fromCallable(() -> {
             try {
-                final Hospital unique = daoSession.getHospitalDao().queryBuilder()
-                        .where(HospitalDao.Properties.Id.eq(hospital.getId())).unique();
-                daoSession.getHospitalDao().deleteInTx(unique);
+                daoSession.getHospitalDao().deleteInTx(hospitals);
                 return true;
             } catch (Exception e){
                 e.printStackTrace();
@@ -66,12 +64,10 @@ public class AppDbHelper implements DbHelper {
 
 
     @Override
-    public Flowable<Boolean> deleteMedicine(Medicine medicine) {
+    public Flowable<Boolean> deleteMedicines(List<Medicine> medicines) {
         return Flowable.fromCallable(() -> {
             try {
-                final Medicine unique = daoSession.getMedicineDao().queryBuilder()
-                        .where(MedicineDao.Properties.Id.eq(medicine.getId())).unique();
-                daoSession.getMedicineDao().deleteInTx(unique);
+                daoSession.getMedicineDao().deleteInTx(medicines);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -136,10 +132,10 @@ public class AppDbHelper implements DbHelper {
     }
 
     @Override
-    public Flowable<Boolean> saveHospital(Hospital hospital) {
+    public Flowable<Boolean> saveHospitals(List<Hospital> hospitals) {
         return Flowable.fromCallable(() -> {
             try {
-                daoSession.getHospitalDao().insertOrReplaceInTx(hospital);
+                daoSession.getHospitalDao().insertOrReplaceInTx(hospitals);
                 return true;
             } catch (Exception e){
                 e.printStackTrace();
@@ -149,10 +145,10 @@ public class AppDbHelper implements DbHelper {
     }
 
     @Override
-    public Flowable<Boolean> saveMedicine(Medicine medicine) {
+    public Flowable<Boolean> saveMedicines(List<Medicine> medicines) {
         return Flowable.fromCallable(() -> {
             try {
-                daoSession.getMedicineDao().insertOrReplaceInTx(medicine);
+                daoSession.getMedicineDao().insertOrReplaceInTx(medicines);
                 return true;
             } catch (Exception e){
                 e.printStackTrace();

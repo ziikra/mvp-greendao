@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class InsertPresenter<V extends InsertMvpView> extends BasePresenter<V> implements InsertMvpPresenter<V>{
+public class InsertPresenter<V extends InsertMvpView> extends BasePresenter<V> implements InsertMvpPresenter<V> {
 
     private static final String TAG = "InsertPresenter";
 
@@ -35,10 +35,9 @@ public class InsertPresenter<V extends InsertMvpView> extends BasePresenter<V> i
         //Insert Hospital JSON to DB
         getCompositeDisposable().add(getDataManager()
                 .seedDatabaseHospital(numOfData)
-                .concatMap(Flowable::fromIterable)
-                .concatMap(hospital -> {
+                .concatMap(hospitals -> {
                     insertTime.set(System.currentTimeMillis());
-                    return getDataManager().insertHospital(hospital);
+                    return getDataManager().insertHospitals(hospitals);
                 })
                 .doOnNext(aBoolean -> {
                     if (aBoolean) {
@@ -47,16 +46,15 @@ public class InsertPresenter<V extends InsertMvpView> extends BasePresenter<V> i
                 })
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(aBoolean -> {
-                        } , throwable -> getMvpView().onError(throwable.getMessage())
+                        }, throwable -> getMvpView().onError(throwable.getMessage())
                 )
         );
         //Insert Medicine JSON to DB
         getCompositeDisposable().add(getDataManager()
                 .seedDatabaseMedicine(numOfData)
-                .concatMap(Flowable::fromIterable)
-                .concatMap(medicine -> {
+                .concatMap(medicines -> {
                     insertTime.set(System.currentTimeMillis());
-                    return getDataManager().insertMedicine(medicine);
+                    return getDataManager().insertMedicines(medicines);
                 })
                 .doOnNext(aBoolean -> {
                     if (aBoolean) {
@@ -83,7 +81,7 @@ public class InsertPresenter<V extends InsertMvpView> extends BasePresenter<V> i
                                 executionTime.setNumOfRecordInsert(numOfData.toString());
                                 executionTimePreference.setExecutionTime(executionTime);
                             }
-                        } , throwable -> Log.d(TAG, "insertDatabase: " + throwable.getMessage())
+                        }, throwable -> Log.d(TAG, "insertDatabase: " + throwable.getMessage())
                 )
         );
     }

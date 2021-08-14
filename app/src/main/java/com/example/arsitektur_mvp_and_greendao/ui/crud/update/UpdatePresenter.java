@@ -54,11 +54,11 @@ public class UpdatePresenter<V extends UpdateMvpView> extends BasePresenter<V> i
                         } else
                             break;
                     }
-                    return Flowable.fromIterable(medicineList);
+                    return Flowable.just(medicineList);
                 })
-                .concatMap(medicine -> {
+                .concatMap(medicines -> {
                     updateTime.set(System.currentTimeMillis());
-                    return getDataManager().updateDatabaseMedicine(medicine);
+                    return getDataManager().updateDatabaseMedicine(medicines);
                 })
                 .doOnNext(aBoolean -> {
                     if (aBoolean)
