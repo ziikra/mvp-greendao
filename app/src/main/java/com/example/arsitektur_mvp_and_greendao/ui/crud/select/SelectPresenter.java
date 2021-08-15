@@ -63,12 +63,13 @@ public class SelectPresenter<V extends SelectMvpView> extends BasePresenter<V> i
                             hospitals.add(indexAdd.intValue(), hospital);
                             indexAdd.getAndIncrement();
                         }
+                        if (indexAdd.longValue() == numOfData)
+                            indexAdd.set(0);
                     }
                 })
             .observeOn(getSchedulerProvider().ui())
             .subscribe(hospital -> {
             }, throwable -> Log.d("SVM", "selectDatabase 1: " + throwable.getMessage())));
-        indexAdd.set(0);
         getCompositeDisposable().add(getDataManager()
             .getAllMedicine(numOfData)
                 .concatMap(Flowable::fromIterable)
