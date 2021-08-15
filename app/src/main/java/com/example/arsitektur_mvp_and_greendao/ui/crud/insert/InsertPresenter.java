@@ -9,10 +9,7 @@ import com.example.arsitektur_mvp_and_greendao.ui.base.BasePresenter;
 import com.example.arsitektur_mvp_and_greendao.utils.rx.SchedulerProvider;
 
 import java.util.concurrent.atomic.AtomicLong;
-
 import javax.inject.Inject;
-
-import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class InsertPresenter<V extends InsertMvpView> extends BasePresenter<V> implements InsertMvpPresenter<V> {

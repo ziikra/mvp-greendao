@@ -69,7 +69,7 @@ public class SelectPresenter<V extends SelectMvpView> extends BasePresenter<V> i
                 .subscribe(medicalList -> {
                     if (!isViewAttached())
                         return;
-                    if (index.longValue() == numOfData) {
+                    if (index.longValue() == numOfData|| medicalList.size() == 0) {
                         getMvpView().selectMedicalData(medicalList); //Change data list
                         getMvpView().updateNumOfRecordSelect(index.longValue());
                         getMvpView().updateSelectDatabaseTime(selectDbTime.longValue()); //Change execution time
@@ -86,8 +86,8 @@ public class SelectPresenter<V extends SelectMvpView> extends BasePresenter<V> i
                         executionTime.setNumOfRecordSelect(numOfData.toString());
                         executionTimePreference.setExecutionTime(executionTime);
 
-                        Log.d(TAG, "selectDatabase: " + index.get());
-                        index.getAndIncrement();
+                        if (medicalList.size() != 0)
+                            index.getAndIncrement();
                     }
                 }, throwable -> Log.d(TAG, "selectDatabase: " + throwable.getMessage()))
         );

@@ -14,7 +14,6 @@ import com.google.gson.internal.$Gson$Types;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -60,7 +59,7 @@ public class AppDataManager implements DataManager {
                     type);
             return  Flowable.just(hospitalList);
         } catch (Exception e) {
-            return Flowable.just(new ArrayList<>());
+            return Flowable.just(null);
         }
     }
 
@@ -107,7 +106,7 @@ public class AppDataManager implements DataManager {
                     type);
             return Flowable.just(medicineList);
         } catch (Exception e) {
-            return Flowable.just(new ArrayList<>());
+            return Flowable.just(null);
         }
     }
 

@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.inject.Inject;
-
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -39,9 +38,11 @@ public class DeletePresenter <V extends DeleteMvpView> extends BasePresenter<V> 
                 .getAllHospital(numOfData >= 1000 ? numOfData / 1000 : 1)
                 .concatMap(Flowable::fromIterable)
                 //Get All Medicine with same hospital Id
-                .concatMap(hospital ->
-                    getDataManager().getMedicineForHospitalId(hospital.getId())
-                )
+                .concatMap(hospital -> Flowable.zip(
+                        getDataManager().getMedicineForHospitalId(hospital.getId()),
+                        Flowable.just(hospital),
+                        ((medicineList, hospital1) -> medicineList)
+                ))
                 //Delete All Medicine
                 .concatMap(medicines -> {
                         deleteTime.set(System.currentTimeMillis());
@@ -57,7 +58,7 @@ public class DeletePresenter <V extends DeleteMvpView> extends BasePresenter<V> 
                 .subscribe(aBoolean -> {
                             if (!isViewAttached())
                                 return;
-                            if (index.longValue() == 0) {
+                            if (index.get() == 0) {
                                 getMvpView().updateNumOfRecordDelete(index.longValue()); //Change number of record
                                 getMvpView().updateDeleteDatabaseTime(deleteDbTime.longValue()); //Change execution time
                                 AtomicLong endTime = new AtomicLong(System.currentTimeMillis());
